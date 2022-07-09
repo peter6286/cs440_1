@@ -1,0 +1,77 @@
+path_dfs = []
+def dfs(mz,x1,y1,x2,y2): #start at (x1,y1), end at (x2,y2)
+    dirs = [
+        lambda x,y: ( x+1 , y ),
+        lambda x,y: ( x-1 , y ),
+        lambda x,y: ( x , y+1 ),
+        lambda x,y: ( x , y-1 )
+        ]
+    global path_dfs
+    
+    if x1 == x2 and y1 == y2:
+        print path_dfs
+        return path_dfs
+    
+    for di in dirs:
+        cur = [di(x1,y1)]
+        if cur[0] > len(mz) - 2 or cur[1] > len[maze] - 2 or cur[0] < 0 or cur[1] < 0:
+            continue
+        direction = ''
+        if cur[0] - x1 == 1:
+            direction = 'D' #Downward
+        if cur[0] - x1 == -1:
+            direction = 'U' #Upward
+        if cur[1] - y1 == 1:
+            direction = 'R' #Rightward
+        if cur[0] - y1 == -1:
+            direction = 'L' #Leftward
+        mz[cur[0]][cur[1]] = 1 #maze 1 for wall and 0 for acessible
+        path_dfs += direction
+        dfs(mz,cur[0], cur[1], x2, y2)
+        path = path_dfs[:-1]
+        maze[cur[0]][cur[1]] = 0
+        
+        
+path_bfs = []
+def bfs(mz,x1,y1,x2,y2):
+    dirs = [
+        lambda x,y: ( x+1 , y ),
+        lambda x,y: ( x-1 , y ),
+        lambda x,y: ( x , y+1 ),
+        lambda x,y: ( x , y-1 )
+        ]
+    
+    n,m = len(maze),len(maze[0])
+    global path_dfs
+    fringe = [] #stores the node that are needed to explore
+    fringe.append((x1,y1))
+    mz[x1][y1] = 1
+    path_bfs.append(fringe[0])
+    
+    while len(fringe) > 0:
+        cur = fringe[0]
+        
+        if cur[0] == x2 and cur[1] == y2:
+            temp_path = []
+            temp_path.append(path_bfs[-1])
+            temp_Node = path_bfs[-1]
+            path_bfs.pop()
+            
+            while (not temp_Node[0] == x1) and (not temp_Node[1] == y1):
+                for di in dirs:
+                    node = di(temp_Node[0],temp_Node[1])
+                    count = 0
+                    for n in path_bfs:
+                        if node[0] == n[0] and node[1] == n[1]:
+                            temp_path.append(node)
+                            path_bfs.pop(count)
+                        count++
+            path_bfs = temp_path.reverse()
+            return True
+        
+        for di in dirs:
+            next = di(cur[0],cur[1])
+            if mz[cur[0]][cur[1]] == 0:
+                path_bfs.append(next)
+                mz[cur[0]][cur[1]] = 1
+    return False
