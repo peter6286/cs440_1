@@ -67,7 +67,6 @@ def check(matrix):
 
 
 
-
 def genratemaze(rows,cols):
     maze=[[0 for i in range(cols)] for i in range(rows)]
     for i in range(rows):
@@ -78,13 +77,40 @@ def genratemaze(rows,cols):
                 maze[i][j] = 0
     return maze
 
+
+
+def env(rows,cols):
+    maze = genratemaze(rows, cols)
+    while check(maze) != True:
+        maze = genratemaze(rows,cols)
+    #print(maze)
+    return maze
+
+
+def fire(maze):
+    row, col = len(maze), len(maze)
+    low, high = 0, row * col - 1
+    mid = (low + high) // 2
+    if maze[mid//col][mid%col]==1:
+        for i in range(4):  # 检查每个方向
+            point = maze[mid // col + dirs[i][0]][mid % col + dirs[i][1]]
+            if point == 0:
+                maze[mid // col + dirs[i][0]][mid % col + dirs[i][1]] = "#"
+                return maze
+    else:
+        maze[mid//col][mid%col]= "#"
+    return maze
+
+
+
+
 A = [[0, 0, 0],
-     [1, 1, 0],
+     [1, 0, 0],
      [0, 0, 0]]
 
-mymaze = genratemaze(9,9)
-#print(mymaze)
-print(check(A))
+#mymaze = genratemaze(9,9)
+#print(env(3,3))
+print(fire(A))
 
 
 #check(A)
